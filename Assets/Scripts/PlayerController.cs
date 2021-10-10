@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     public float rotationInterpolation = 0.4f;// velocidad de firo del personaje
     public bool isMoving;
 
+    public Transform mira;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +32,25 @@ public class PlayerController : MonoBehaviour
         else
         {
             isMoving = false;
+        }
+
+        //Detectar mouse y posicionar putnero
+        mira.position = Camera.main.ScreenToWorldPoint(new Vector3(
+            Input.mousePosition.x,
+            Input.mousePosition.y,
+            -Camera.main.transform.position.z
+            ));
+
+        if (Input.GetButtonDown("Fire1")) disparar();
+
+    }
+
+    void disparar()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, (mira.position - mira.position).normalized, 1000f, ~(1 << 6));
+        if (hit.collider != null)
+        {
+            Destroy(hit.collider.gameObject);
         }
     }
 
